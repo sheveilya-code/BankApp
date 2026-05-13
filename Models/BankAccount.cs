@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BankApp.Models
+﻿namespace BankApp.Models
 {
     public abstract class BankAccount
     {
@@ -14,7 +12,8 @@ namespace BankApp.Models
             private set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Номер счёта не может быть пустым");
+                    throw new ArgumentException("Номер счёта не может быть пустым.");
+
                 _accountNumber = value;
             }
         }
@@ -22,10 +21,11 @@ namespace BankApp.Models
         public string Owner
         {
             get => _owner;
-            protected set
+            private set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Владелец не может быть пустым");
+                    throw new ArgumentException("Имя владельца не может быть пустым.");
+
                 _owner = value;
             }
         }
@@ -33,32 +33,39 @@ namespace BankApp.Models
         public decimal Balance
         {
             get => _balance;
-            protected set => _balance = value >= 0 ? value : throw new ArgumentOutOfRangeException("Баланс не может быть отрицательным");
+            protected set => _balance = value;
         }
 
-        public BankAccount(string accountNumber, string owner, decimal initialBalance = 0)
+        protected BankAccount(string accountNumber, string owner, decimal initialBalance)
         {
             AccountNumber = accountNumber;
             Owner = owner;
+
+            if (initialBalance < 0)
+                throw new ArgumentException("Начальный баланс не может быть отрицательным.");
+
             Balance = initialBalance;
         }
-
-        public abstract void DisplayInfo();
 
         public virtual void Deposit(decimal amount)
         {
             if (amount <= 0)
-                throw new ArgumentOutOfRangeException("Сумма пополнения должна быть положительной");
+                throw new ArgumentException("Сумма пополнения должна быть больше нуля.");
+
             Balance += amount;
         }
 
         public virtual void Withdraw(decimal amount)
         {
             if (amount <= 0)
-                throw new ArgumentOutOfRangeException("Сумма снятия должна быть положительной");
+                throw new ArgumentException("Сумма снятия должна быть больше нуля.");
+
             if (amount > Balance)
-                throw new InvalidOperationException("Недостаточно средств на счёте");
+                throw new InvalidOperationException("Недостаточно средств на счёте.");
+
             Balance -= amount;
         }
+
+        public abstract void DisplayInfo();
     }
 }

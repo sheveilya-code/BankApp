@@ -1,65 +1,50 @@
 ﻿using BankApp.Models;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BankApp.Services
 {
     public class Bank
     {
-        private List<BankAccount> _accounts = new();
+        private readonly List<BankAccount> _accounts = new();
 
         public void AddAccount(BankAccount account)
         {
+            if (account == null)
+                throw new ArgumentNullException(nameof(account), "Счёт не может быть пуст.");
+
+            if (_accounts.Any(a => a.AccountNumber == account.AccountNumber))
+                throw new InvalidOperationException("Счёт с таким номером уже существует.");
+
             _accounts.Add(account);
-            Console.WriteLine($"Счёт {account.AccountNumber} добавлен в банк");
         }
 
-        public BankAccount FindAccount(string accountNumber)
+        public BankAccount? FindAccountByNumber(string accountNumber)
         {
-            return _accounts.FirstOrDefault(acc => acc.AccountNumber == accountNumber);
+            return _accounts.FirstOrDefault(a => a.AccountNumber == accountNumber);
+        }
+
+        public List<BankAccount> GetAllAccounts()
+        {
+            return _accounts;
+        }
+
+        public List<SavingsAccount> GetSavingsAccounts()
+        {
+            return _accounts.OfType<SavingsAccount>().ToList();
         }
 
         public void DisplayAllAccounts()
         {
             if (_accounts.Count == 0)
             {
-                Console.WriteLine("В банке нет открытых счетов");
+                Console.WriteLine("Счета отсутствуют.");
+                Console.WriteLine();
                 return;
             }
 
-            Console.WriteLine("=== Все счета в банке ===");
             foreach (var account in _accounts)
             {
                 account.DisplayInfo();
-                Console.WriteLine();
             }
-        }
-
-        public List<SavingsAccount> GetSavingsAccounts()
-        {
-            return _accounts
-                .OfType<SavingsAccount>()
-                .ToList();
-        }
-
-        public List<BankAccount> GetAccountsWithBalanceAbove(decimal threshold)
-        {
-            return _accounts
-                .Where(acc => acc.Balance > threshold)
-                .ToList();
-        }
-
-        public decimal GetTotalBalance()
-        {
-            return _accounts.Sum(acc => acc.Balance);
-        }
-
-        public List<string> GetAccountNumbersByOwner(string ownerSubstring)
-        {
-            return _accounts
-                .Where(acc => acc.Owner.Contains(ownerSubstring, StringComparison.OrdinalIgnoreCase))
-                .Select(acc => acc.AccountNumber)
-                .ToList();
         }
     }
 }
