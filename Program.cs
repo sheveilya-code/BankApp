@@ -8,10 +8,24 @@ namespace BankApp
         static void Main()
         {
             Console.WriteLine("=== Банк ===");
+            try
+            {
+                var account = new TestAccount("ACC-002", "Мария Иванова", 2000);
+                Console.WriteLine("Счёт создан успешно!");
+                account.DisplayInfo();
 
-            var testAccount = new TestAccount("ACC-001", "Иван Петров", 1000);
-            testAccount.DisplayInfo();
+                Console.WriteLine("\nПополнение на 500...");
+                account.Deposit(500);
+                account.DisplayInfo();
 
+                Console.WriteLine("\nСнятие 300...");
+                account.Withdraw(300);
+                account.DisplayInfo();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
             Console.ReadLine();
         }
     }
