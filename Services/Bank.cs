@@ -34,5 +34,32 @@ namespace BankApp.Services
                 Console.WriteLine();
             }
         }
+
+        public List<SavingsAccount> GetSavingsAccounts()
+        {
+            return _accounts
+                .OfType<SavingsAccount>()
+                .ToList();
+        }
+
+        public List<BankAccount> GetAccountsWithBalanceAbove(decimal threshold)
+        {
+            return _accounts
+                .Where(acc => acc.Balance > threshold)
+                .ToList();
+        }
+
+        public decimal GetTotalBalance()
+        {
+            return _accounts.Sum(acc => acc.Balance);
+        }
+
+        public List<string> GetAccountNumbersByOwner(string ownerSubstring)
+        {
+            return _accounts
+                .Where(acc => acc.Owner.Contains(ownerSubstring, StringComparison.OrdinalIgnoreCase))
+                .Select(acc => acc.AccountNumber)
+                .ToList();
+        }
     }
 }
