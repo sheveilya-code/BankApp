@@ -8,36 +8,28 @@ namespace BankApp
         static void Main()
         {
             Console.WriteLine("=== Банк ===");
-            try
-            {
-                var account = new TestAccount("ACC-002", "Мария Иванова", 2000);
-                Console.WriteLine("Счёт создан успешно!");
-                account.DisplayInfo();
 
-                Console.WriteLine("\nПополнение на 500...");
-                account.Deposit(500);
-                account.DisplayInfo();
+            var regularAccount = new BankAccountConcrete("ACC-003", "Алексей Сидоров", 32000);
+            var savingsAccount = new SavingsAccount("SAV-001", "Елена Козлова", 5000);
 
-                Console.WriteLine("\nСнятие 300...");
-                account.Withdraw(300);
-                account.DisplayInfo();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка: {ex.Message}");
-            }
+            Console.WriteLine("\n=== Обычный счёт ===");
+            regularAccount.DisplayInfo();
+
+            Console.WriteLine("\n=== Сберегательный счёт ===");
+            savingsAccount.DisplayInfo();
+
             Console.ReadLine();
         }
     }
 
-    public class TestAccount : BankAccount
+    public class BankAccountConcrete : BankAccount
     {
-        public TestAccount(string accountNumber, string owner, decimal initialBalance)
+        public BankAccountConcrete(string accountNumber, string owner, decimal initialBalance)
             : base(accountNumber, owner, initialBalance) { }
 
         public override void DisplayInfo()
         {
-            Console.WriteLine($"Счёт: {AccountNumber}");
+            Console.WriteLine($"Обычный счёт: {AccountNumber}");
             Console.WriteLine($"Владелец: {Owner}");
             Console.WriteLine($"Баланс: {Balance} Руб.");
         }
