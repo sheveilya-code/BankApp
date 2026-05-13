@@ -1,4 +1,5 @@
 ﻿using BankApp.Models;
+using BankApp.Services;
 using System;
 
 namespace BankApp
@@ -9,14 +10,14 @@ namespace BankApp
         {
             Console.WriteLine("=== Банк ===");
 
-            var regularAccount = new BankAccountConcrete("ACC-003", "Алексей Сидоров", 32000);
+            var bank = new Bank();
+
+            var regularAccount = new BankAccountConcrete("ACC-003", "Алексей Сидоров", 3000);
             var savingsAccount = new SavingsAccount("SAV-001", "Елена Козлова", 5000);
-
-            Console.WriteLine("\n=== Обычный счёт ===");
-            regularAccount.DisplayInfo();
-
-            Console.WriteLine("\n=== Сберегательный счёт ===");
-            savingsAccount.DisplayInfo();
+            bank.AddAccount(regularAccount);
+            bank.AddAccount(savingsAccount);
+            
+            bank.DisplayAllAccounts();
 
             Console.ReadLine();
         }
